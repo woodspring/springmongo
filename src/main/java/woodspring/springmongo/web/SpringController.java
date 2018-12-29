@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import woodspring.springmongo.model.Kronos_Dump;
+import woodspring.springmongo.service.AdDataService;
 import woodspring.springmongo.service.KronosDumpService;
 
 
@@ -20,6 +21,9 @@ public class SpringController {
 	
 	@Autowired
 	KronosDumpService kcService;
+	
+	@Autowired
+	AdDataService adDataService;
 	
 	
 	@GetMapping("/kronos/load")
@@ -76,6 +80,14 @@ public class SpringController {
 		
 	}
 	
+	@GetMapping("/AD_ALL")
+	public String load_AdAll() {
+		String retStr = "Loading item: " ;
+		int loadNo = (int) adDataService.readADFile("AD_ALL.xls");
+		retStr += loadNo;
+		return retStr;
+		
+	}
 	
 
 }

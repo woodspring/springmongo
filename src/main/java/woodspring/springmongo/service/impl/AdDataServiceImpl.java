@@ -1,23 +1,15 @@
 package woodspring.springmongo.service.impl;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Iterator;
+import java.util.Arrays;
 
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.write.*;
-import jxl.write.Number;
-
-import java.io.File;
-import java.io.IOException;
 import org.springframework.stereotype.Service;
 
+import jxl.Cell;
+import jxl.Workbook;
 import lombok.extern.slf4j.Slf4j;
 import woodspring.springmongo.service.AdDataService;
 
@@ -43,21 +35,59 @@ public class AdDataServiceImpl implements AdDataService {
 	        try {
 
 	            workbook = Workbook.getWorkbook(new File(FILE_NAME));
+Arrays.stream( workbook.getSheets()).forEach( sheet -> {
+	int rowNo = sheet.getRows();
+    int colNo = sheet.getColumns();
+    System.out.println("rowNo:["+ rowNo+"] colNo:["+colNo+"]");
+    //Cell cell1 = sheet.getCell(0, 0);
+    String l="{", ll="[", e="=", r = "}", rr="]", c=",", q="\"", s=" ", t=":";
+    StringBuffer strBuff = new StringBuffer();
+    strBuff.append(l);
+    for (int rowInd =0; rowInd < rowNo; rowInd++) {
+    	strBuff.append(q+"index"+q+s+t+s+rowInd+c);
+    	strBuff.append(q+"CONTEXT"+q+s+t+s +ll);
+    	int size =0;
+    	
+    	for (int colInd =0; colInd < colNo; colInd++) {
+    		Cell cell = sheet.getCell(colInd, rowInd );
+    		String cType = cell.getType().toString();
+    		if (!("Empty".equalsIgnoreCase(cType))) {
+    			strBuff.append(l+q+"row"  +q+ s+t+s+colInd+s+c);
+    			strBuff.append(  q+"type" +q+ s+t+s+q+cType+q+c );
+    			strBuff.append(  q+"value"+q+s+t+s+q+cell.getContents()+q+r+c);
+    		}
+    		System.out.print(" row:"+ rowInd+" col:"+ colInd+" type:["+ cell.getType().toString()+"] value:["+cell.getContents()+"]|");
+    	}
+    	strBuff.deleteCharAt(strBuff.lastIndexOf(c));
+    	strBuff.append(q+ll+c);
+    	strBuff.append(q+"size"+q+s+t+s+colNo+s+r);
+    	System.out.print("\n sheet:"+sheet.getName());;
+    	System.out.println(" cell:"+ strBuff.toString());
+    }
+    
+    System.out.println("\n\n==========end of sheet===="+ sheet.getName()+"=============\n\n");
+});
 
-	            Sheet sheet = workbook.getSheet(0);
-	            
-	            int rowNo = sheet.getRows();
-	            int colNo = sheet.getColumns();
-	            System.out.println("rowNo:["+ rowNo+"] colNo:["+colNo+"]");
-	            //Cell cell1 = sheet.getCell(0, 0);
-	            for (int rowInd =0; rowInd < rowNo; rowInd++) {
-	            	for (int colInd =0; colInd < colNo; colInd++) {
-	            		Cell cell = sheet.getCell(colInd, rowInd );
-	            		System.out.print(" row:"+ rowInd+" col:"+ colInd+" type:["+ cell.getType().toString()+"] value:["+cell.getContents()+"]|");
-	            	}
-	            	System.out.println("\n");;
-	            }
-		   
+
+
+//	            Sheet sheet = workbook.getSheet(0);
+//	            
+//	            int rowNo = sheet.getRows();
+//	            int colNo = sheet.getColumns();
+//	            System.out.println("rowNo:["+ rowNo+"] colNo:["+colNo+"]");
+//	            //Cell cell1 = sheet.getCell(0, 0);
+//	            String l="{", e="=", r = "{", c=",";
+//	            StringBuffer strBuff = new StringBuffer();
+//	            strBuff.append(l);
+//	            for (int rowInd =0; rowInd < rowNo; rowInd++) {
+//	            	
+//	            	for (int colInd =0; colInd < colNo; colInd++) {
+//	            		Cell cell = sheet.getCell(colInd, rowInd );
+//	            		System.out.print(" row:"+ rowInd+" col:"+ colInd+" type:["+ cell.getType().toString()+"] value:["+cell.getContents()+"]|");
+//	            	}
+//	            	System.out.println("\n");;
+//	            }
+//		   
 		   
 		   
 		   
